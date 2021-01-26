@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#define N 20
+#define max 20
 
 struct consumer
 {
@@ -11,20 +11,22 @@ struct consumer
     char name[30];
 };
 
-/*char a[20][30];
-int front=-1, rear=-1;*/
+char a[max][100];
+int front=-1, rear=-1;
 void acceptAllDetails (struct consumer [], int);
 void displayAllDetails (struct consumer [], int);
 void withdrawMoney (struct consumer [], int, int);
 void depositMoney (struct consumer [], int, int);
 int searchAccountDetails (struct consumer[], int, int);
 _Bool isAccountExist(struct consumer[], int, int);
-//void viewQueue(int);
+void insertInQueue(char data[80]);
+void viewQueue();
+void deleteFromQueue();
 
 
 int main()
 {
-    struct consumer c[N];
+    struct consumer c[max];
     int n, ch, acc_no, data, amount;
     printf("Welcome to G10 banking system");
     printf ("\nHow many records would you like to enter?\n");
@@ -64,7 +66,8 @@ int main()
                 data=searchAccountDetails (c, n, acc_no);
                 depositMoney (c, data, amount);
                 printf ("\nAmount deposited.\n");
-                //strcpy(a[++front][30], "Deposited in an account");
+                //strcpy(a[++rear], "Deposit_Operation");
+                insertInQueue("Deposit operation");
                 system ("pause");
             }
             else
@@ -84,7 +87,8 @@ int main()
                 scanf ("%d", &amount);
                 data=searchAccountDetails (c, n, acc_no);
                 withdrawMoney (c, data, amount);
-                //strcpy(a[++front][15], "Withdrawn from an account");
+                //strcpy (a[++rear], "Withdraw_Operation");
+                insertInQueue("Withdraw operation");
                 system ("pause");
             }
             else
@@ -93,9 +97,10 @@ int main()
                 system ("pause");
             }
             system ("cls");
+            break;
 
         case 5:
-            //viewQueue(n);
+            viewQueue();
             system ("cls");
             break;
 
@@ -115,8 +120,9 @@ void acceptAllDetails(struct consumer data[20], int n)
         printf ("\nEnter the details of account %d.\n", i+1);
         printf ("Enter the account number: ");
         scanf ("%d", &data[i].account_no);
-        printf ("\nEnter your name: ");
-        scanf ("%s", data[i].name);
+        printf ("Enter your name: ");
+        scanf("%s", &data[i].name);
+        //fgets(data[i].name, 30, stdin);
         data[i].balance=0;
     }
     system ("pause");
@@ -177,18 +183,45 @@ _Bool isAccountExist(struct consumer data[20], int n, int acc)
     return false;
 }
 
-/*void viewQueue(int n)
+void insertInQueue(char data[80])
+{
+    if(rear == max-1)
+    {
+        deleteFromQueue();
+        return;
+    }
+
+    if (front==-1)
+        front=rear=0;
+
+    else
+        rear++;
+
+    strcpy(a[rear], data);
+}
+
+void deleteFromQueue()
+{
+    if (front<0 || front>rear)
+    {
+        return;
+    }
+    front++;
+}
+
+void viewQueue()
 {
     int i;
     if (front==-1)
-        printf ("\nQueue empty\n");
+        printf ("\nNothing happened today\n");
 
     else
     {
-        for (i=0; i<=n; i++)
+        for (i=front; i<=rear; i++)
         {
-            printf ("%s\n", a[1][i]);
+            printf ("%s\n", a[i]);
         }
     }
+    printf ("\n");
+    system ("PAUSE");
 }
-*/

@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#define max 20
+#include <conio.h>
+#define max 5
 
 struct consumer
 {
@@ -10,6 +11,38 @@ struct consumer
     int balance;
     char name[30];
 };
+
+char password[10];
+void getPassword()
+{
+    for (int i = 0; i < 5; i++)
+    {
+        char ch = getch();
+        password[i] = ch;
+        ch = '*';
+        printf ("%c", ch);
+    }
+    getch();
+}
+
+void showGroupDetails()
+{
+    printf ("\tBanking software made by group 10 of CO3iB\n");
+    printf ("\tGroup details:\n");
+    printf ("\t-------------------------\n");
+    printf ("\t|S.No.|   Name   | R.No.|");
+    printf ("\n\t-------------------------\n");
+    printf ("\t|  1  |  Piyush  |  38  |\n");
+    printf ("\t-------------------------\n");
+    printf ("\t|  2  |   Vinit  |  39  |\n");
+    printf ("\t-------------------------\n");
+    printf ("\t|  3  |  Vedant  |  40  |\n");
+    printf ("\t-------------------------\n");
+    printf ("\t|  4  | Siddhant |  41  |\n");
+    printf ("\t-------------------------\n");
+    system ("pause");
+    system ("cls");
+}
 
 char a[max][100];
 int front=-1, rear=-1;
@@ -19,6 +52,7 @@ void withdrawMoney (struct consumer [], int, int);
 void depositMoney (struct consumer [], int, int);
 int searchAccountDetails (struct consumer[], int, int);
 _Bool isAccountExist(struct consumer[], int, int);
+_Bool loginToAccount();
 void insertInQueue(char data[80]);
 void viewQueue();
 void deleteFromQueue();
@@ -28,19 +62,27 @@ int main()
 {
     struct consumer c[max];
     int n, ch, acc_no, data, amount;
+    showGroupDetails();
     printf("Welcome to G10 banking system");
     printf ("\nHow many records would you like to enter?\n");
     scanf ("%d", &n);
     acceptAllDetails (c, n);
     while (1)
     {
-        printf ("\nMenu:\n1. Display all records\n2. Search your account details\n3. Deposit money into your account\n4. Withdraw money from your account\n5. View ATM's pending operations (administrator only)\n6. Exit\n");
+        printf ("\nMenu:\n1. Display all records (administrator only)\n2. Search your account details\n3. Deposit money into your account\n4. Withdraw money from your account\n5. View ATM's pending operations (administrator only)\n6. Exit\n");
         printf ("\nEnter your choice: ");
         scanf ("%d", &ch);
         switch (ch)
         {
         case 1:
-            displayAllDetails(c, n);
+            if (loginToAccount()==true)
+            {
+                displayAllDetails(c, n);
+                insertInQueue("\nAll details were viewed.");
+            }
+
+            else
+                printf ("\nLogin unsuccessful.\n");
             system ("cls");
             break;
 
@@ -51,7 +93,10 @@ int main()
             if (data==-1)
                 printf ("\nAccount %d does not exist.\n", acc_no);
             else
-            printf ("\nAccount number: %d\nName of holder: %s\nBalance in account: %d\n", c[data].account_no, c[data].name, c[data].balance);
+            {
+                printf ("\nAccount number: %d\nName of holder: %s\nBalance in account: %d\n", c[data].account_no, c[data].name, c[data].balance);
+                insertInQueue ("\nData was searched.");
+            }
             system ("pause");
             system ("cls");
             break;
@@ -66,8 +111,7 @@ int main()
                 data=searchAccountDetails (c, n, acc_no);
                 depositMoney (c, data, amount);
                 printf ("\nAmount deposited.\n");
-                //strcpy(a[++rear], "Deposit_Operation");
-                insertInQueue("Deposit operation");
+                insertInQueue("\nAmount was deposited");
                 system ("pause");
             }
             else
@@ -87,8 +131,6 @@ int main()
                 scanf ("%d", &amount);
                 data=searchAccountDetails (c, n, acc_no);
                 withdrawMoney (c, data, amount);
-                //strcpy (a[++rear], "Withdraw_Operation");
-                insertInQueue("Withdraw operation");
                 system ("pause");
             }
             else
@@ -100,12 +142,20 @@ int main()
             break;
 
         case 5:
-            viewQueue();
+            if (loginToAccount()==true)
+            {
+                viewQueue();
+            }
+            else
+                printf ("\nLogin failed. Try again later if you want to.");
             system ("cls");
             break;
 
         case 6:
             exit (1);
+
+        default:
+            printf ("\nEnter proper choices!");
 
         }
     }
@@ -121,9 +171,8 @@ void acceptAllDetails(struct consumer data[20], int n)
         printf ("Enter the account number: ");
         scanf ("%d", &data[i].account_no);
         printf ("Enter your name: ");
-        scanf("%s", &data[i].name);
-        //fgets(data[i].name, 30, stdin);
-        data[i].balance=0;
+        scanf ("%s", &data[i].name);
+        data[i].balance=1000;
     }
     system ("pause");
     system ("cls");
@@ -135,7 +184,8 @@ void displayAllDetails(struct consumer list[20], int n)
     for (i=0; i<n; i++)
     {
         printf ("\nAccount details %d:\nAccount number: %d\nName of account holder: %s\nBalance in account: %d\n", i+1, list[i].account_no, list[i].name, list[i].balance);
-        system ("PAUSE");
+        printf ("----------------------------------");
+        getch();
     }
 }
 
@@ -148,7 +198,6 @@ int searchAccountDetails(struct consumer list[20], int n, int account)
         {
             return i;
         }
-
     }
     return -1;
 }
@@ -164,6 +213,7 @@ void withdrawMoney(struct consumer data[20], int n, int amount)
     {
         data[n].balance-=amount;
         printf ("\nAmount withdrawn. ");
+        insertInQueue("\nAmount was withdrawn from account.");
     }
 
     else
@@ -188,7 +238,6 @@ void insertInQueue(char data[80])
     if(rear == max-1)
     {
         deleteFromQueue();
-        return;
     }
 
     if (front==-1)
@@ -224,4 +273,22 @@ void viewQueue()
     }
     printf ("\n");
     system ("PAUSE");
+}
+
+_Bool loginToAccount()
+{
+    char username[10], ch;
+    int i;
+    printf ("\nEnter your user-name: ");
+    scanf ("%s", username);
+    printf ("Enter your password: ");
+    getPassword();
+    //scanf ("%s", password);
+    if (strcmp(username, "admin")==0 && strcmp (password, "admin")==0)
+        return true;
+
+    else
+        return false;
+
+    system ("pause");
 }

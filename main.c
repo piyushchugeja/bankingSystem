@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <conio.h>
 #define max 5
+#define success true
 
 struct consumer
 {
@@ -75,7 +76,7 @@ int main()
         switch (ch)
         {
         case 1:
-            if (loginToAccount()==true)
+            if (loginToAccount()==success)
             {
                 displayAllDetails(c, n);
                 insertInQueue("\nAll details were viewed.");
@@ -142,7 +143,7 @@ int main()
             break;
 
         case 5:
-            if (loginToAccount()==true)
+            if (loginToAccount()==success)
             {
                 viewQueue();
             }
@@ -285,7 +286,7 @@ _Bool loginToAccount()
     getPassword();
     //scanf ("%s", password);
     if (strcmp(username, "admin")==0 && strcmp (password, "admin")==0)
-        return true;
+        return success;
 
     else
         return false;

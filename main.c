@@ -63,7 +63,7 @@ int main()
 {
     struct consumer c[max];
     int n, ch, acc_no, data, amount;
-    showGroupDetails();
+    //showGroupDetails();
     printf("Welcome to G10 banking system");
     printf ("\nHow many records would you like to enter?\n");
     scanf ("%d", &n);

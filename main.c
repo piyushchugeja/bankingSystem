@@ -26,25 +26,6 @@ void getPassword()
     getch();
 }
 
-void showGroupDetails()
-{
-    printf ("\tBanking software made by group 10 of CO3iB\n");
-    printf ("\tGroup details:\n");
-    printf ("\t-------------------------\n");
-    printf ("\t|S.No.|   Name   | R.No.|");
-    printf ("\n\t-------------------------\n");
-    printf ("\t|  1  |  Piyush  |  38  |\n");
-    printf ("\t-------------------------\n");
-    printf ("\t|  2  |   Vinit  |  39  |\n");
-    printf ("\t-------------------------\n");
-    printf ("\t|  3  |  Vedant  |  40  |\n");
-    printf ("\t-------------------------\n");
-    printf ("\t|  4  | Siddhant |  41  |\n");
-    printf ("\t-------------------------\n");
-    system ("pause");
-    system ("cls");
-}
-
 char a[max][100];
 int front=-1, rear=-1;
 void acceptAllDetails (struct consumer [], int);
@@ -63,7 +44,6 @@ int main()
 {
     struct consumer c[max];
     int n, ch, acc_no, data, amount;
-    //showGroupDetails();
     printf("Welcome to G10 banking system");
     printf ("\nHow many records would you like to enter?\n");
     scanf ("%d", &n);
@@ -172,7 +152,7 @@ void acceptAllDetails(struct consumer data[20], int n)
         printf ("Enter the account number: ");
         scanf ("%d", &data[i].account_no);
         printf ("Enter your name: ");
-        scanf ("%s", &data[i].name);
+        scanf ("%s", data[i].name);
         data[i].balance=1000;
     }
     system ("pause");
